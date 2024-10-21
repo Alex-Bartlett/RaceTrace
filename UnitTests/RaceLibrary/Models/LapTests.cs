@@ -9,8 +9,8 @@ namespace UnitTests.RaceLibrary.Models
         {
             // Arrange
             var driverId = "driver";
-            var position = 1;
-            var lapNumber = 1;
+            short position = 1;
+            short lapNumber = 1;
             var lapTime = new LapTime(TimeSpan.Zero);
             // Act
             var actual = new Lap(driverId, position, lapNumber, lapTime);
@@ -21,11 +21,11 @@ namespace UnitTests.RaceLibrary.Models
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        public void Lap_InvalidPosition_ShouldThrowArgumentOutOfRangeException(int position)
+        public void Lap_InvalidPosition_ShouldThrowArgumentOutOfRangeException(short position)
         {
             // Arrange
             var driverId = "driver";
-            var lapNumber = 1;
+            short lapNumber = 1;
             var lapTime = new LapTime(TimeSpan.Zero);
             // Act
             Action actual = () => new Lap(driverId, position, lapNumber, lapTime);
@@ -36,11 +36,11 @@ namespace UnitTests.RaceLibrary.Models
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        public void Lap_InvalidLapNumber_ShouldThrowArgumentOutOfRangeException(int lapNumber)
+        public void Lap_InvalidLapNumber_ShouldThrowArgumentOutOfRangeException(short lapNumber)
         {
             // Arrange
             var driverId = "driver";
-            var position = 1;
+            short position = 1;
             var lapTime = new LapTime(TimeSpan.Zero);
             // Act
             Action actual = () => new Lap(driverId, position, lapNumber, lapTime);
