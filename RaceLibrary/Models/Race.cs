@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace RaceLibrary.Models
 {
-    public class Race
+    public record Race
     {
+        public required string Name { get; init; }
+        public required IEnumerable<Lap> Laps { get; init; }
     }
 }

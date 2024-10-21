@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RaceLibrary.Import
+namespace RaceLibrary.DataTools
 {
     public interface IRaceDataReader
     {
