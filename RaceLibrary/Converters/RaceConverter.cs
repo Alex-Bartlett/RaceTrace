@@ -10,18 +10,25 @@ namespace RaceLibrary.Converters
         {
             using var jsonDocument = JsonDocument.ParseValue(ref reader);
 
-            // TODO: Update this to go MRData -> RaceTable -> Races
-            var races = GetRequiredProperty(jsonDocument.RootElement, "Races").EnumerateArray();
+            var raceElement = FindRaceInJson(jsonDocument.RootElement);
+            
+            return MapRace(raceElement);
+
+        }
+
+        private static JsonElement FindRaceInJson(JsonElement root)
+        {
+            // Navigate the JSON file to find the Races array
+            var mrdata = GetRequiredProperty(root, "MRData");
+            var raceTable = GetRequiredProperty(mrdata, "RaceTable");
+            var races = GetRequiredProperty(raceTable, "Races").EnumerateArray();
             // Expect only one race. With current data, this is correct, but may be subject to change in the future.
             var racesCount = races.Count();
             if (racesCount != 1)
             {
                 throw new JsonException(string.Format("Property 'Races' must contain exactly one element, found ", racesCount));
             }
-            // Get the first race in the races property - the desired root for this deserialization
-            var root = races.First();
-            return MapRace(root);
-
+            return races.First();
         }
 
         private static Race MapRace(JsonElement root)
@@ -39,26 +46,17 @@ namespace RaceLibrary.Converters
             var lapElements = GetRequiredProperty(root, "Laps").EnumerateArray();
             foreach (var lapElement in lapElements)
             {
-                try
+                var lapNumber = GetRequiredProperty(lapElement, "number").GetInt16();
+                var timingsElements = GetRequiredProperty(lapElement, "Timings").EnumerateArray();
+                foreach (var timingsElement in timingsElements)
                 {
-                    var lapNumber = GetRequiredProperty(lapElement, "number").GetInt16();
-                    var timingsElements = GetRequiredProperty(lapElement, "Timings").EnumerateArray();
-                    foreach (var timingsElement in timingsElements)
-                    {
-                        Lap lap = new(
-                            GetRequiredProperty(timingsElement, "driverId").GetString()!,
-                            lapNumber,
-                            GetRequiredProperty(timingsElement, "position").GetInt16(),
-                            MapLapTime(timingsElement)
-                        );
-                        laps.Add(lap);
-                    }
-                }
-                catch (JsonException ex)
-                {
-                    // Skip laps with invalid data - this may not be the desired behaviour
-                    Console.Error.WriteLine("Lap missing required property, skipping. \n{0}", ex.Message);
-                    continue;
+                    Lap lap = new(
+                        GetRequiredProperty(timingsElement, "driverId").GetString()!,
+                        GetRequiredProperty(timingsElement, "position").GetInt16(),
+                        lapNumber,
+                        MapLapTime(timingsElement)
+                    );
+                    laps.Add(lap);
                 }
             }
             return laps;
@@ -73,13 +71,14 @@ namespace RaceLibrary.Converters
             }
             else
             {
-                throw new JsonException("Invalid time format");
+                throw new FormatException("Invalid time format");
             }
         }
 
         private static JsonElement GetRequiredProperty(JsonElement root, string propertyName)
         {
-            if (root.TryGetProperty(propertyName, out var property))
+            if (root.TryGetProperty(propertyName, out var property)
+                && property.ValueKind != JsonValueKind.Null)
             {
                 return property;
             }
