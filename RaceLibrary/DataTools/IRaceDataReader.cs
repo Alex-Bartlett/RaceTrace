@@ -9,8 +9,15 @@ namespace RaceLibrary.DataTools
 {
     public interface IRaceDataReader
     {
-        public string DataPath { get; set; }
-        public Task<IEnumerable<Race>> ReadAllRaceData();
+        /// <summary>
+        /// Path for a directory containing race data json files
+        /// </summary>
+        public string DataDirectory { get; set; }
+        /// <summary>
+        /// Reads all JSON files in the DataDirectory and maps them to Races
+        /// </summary>
+        /// <returns>All races found in the directory</returns>
+        public Task<IEnumerable<Race>> ReadAllFiles();
 
     }
 }

@@ -3,14 +3,14 @@ using RaceLibrary.Models;
 
 namespace UnitTests.RaceLibrary.DataTools
 {
-    public class DataReaderTests
+    public class RaceDataReaderTests
     {
         [Fact]
         public async void TestRead()
         {
             // Arrange
-            var folderPath = "C:\\Users\\ABBARTLETT\\Documents\\Projects\\RaceTrace-DataReader\\Data";
-            var sut = new DataReader(folderPath);
+            var folderPath = "C:\\Users\\ABBARTLETT\\Documents\\Projects\\RaceTrace\\Data";
+            IRaceDataReader sut = new RaceDataReader(folderPath);
             // Act
             var result = await sut.ReadAllFiles();
             // Assert
