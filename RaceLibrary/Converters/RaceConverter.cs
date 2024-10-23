@@ -46,13 +46,13 @@ namespace RaceLibrary.Converters
             var lapElements = GetRequiredProperty(root, "Laps").EnumerateArray();
             foreach (var lapElement in lapElements)
             {
-                var lapNumber = GetRequiredProperty(lapElement, "number").GetInt16();
+                var lapNumber = short.Parse(GetRequiredProperty(lapElement, "number").GetString()!);
                 var timingsElements = GetRequiredProperty(lapElement, "Timings").EnumerateArray();
                 foreach (var timingsElement in timingsElements)
                 {
                     Lap lap = new(
                         GetRequiredProperty(timingsElement, "driverId").GetString()!,
-                        GetRequiredProperty(timingsElement, "position").GetInt16(),
+                        short.Parse(GetRequiredProperty(timingsElement, "position").GetString()!),
                         lapNumber,
                         MapLapTime(timingsElement)
                     );
