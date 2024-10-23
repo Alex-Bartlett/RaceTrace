@@ -1,20 +1,35 @@
-﻿using RaceLibrary.DataTools;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
+using RaceLibrary.DataTools;
 using RaceLibrary.Models;
 
 namespace UnitTests.RaceLibrary.DataTools
 {
     public class RaceDataReaderTests
     {
+        private readonly Mock<ILogger<RaceDataReader>> _loggerMock = new();
+
         [Fact]
         public async void TestRead()
         {
             // Arrange
             var folderPath = "C:\\Users\\ABBARTLETT\\Documents\\Projects\\RaceTrace\\Data";
-            IRaceDataReader sut = new RaceDataReader(folderPath);
+            var sut = new RaceDataReader(folderPath, _loggerMock.Object);
             // Act
-            var result = await sut.ReadAllFiles();
+            var actual = await sut.ReadAllFilesAsync();
             // Assert
-            Assert.NotEmpty(result);
+            Assert.NotEmpty(actual);
+        }
+
+        [Fact]
+        public void RaceDataReader_FolderPathInvalid_ShouldThrowArgumentException()
+        {
+            // Arrange
+            var folderPath = "invalid";
+            // Act
+            Action actual = () => new RaceDataReader(folderPath, _loggerMock.Object);
+            // Assert
+            Assert.Throws<ArgumentException>(actual);
         }
     }
 }

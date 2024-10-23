@@ -6,6 +6,9 @@ namespace RaceLibrary.Converters
 {
     public class RaceConverter : JsonConverter<Race>
     {
+        /// <summary>
+        /// Deserializes a JSON file into a Race object
+        /// </summary>
         public override Race Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             using var jsonDocument = JsonDocument.ParseValue(ref reader);
@@ -16,6 +19,9 @@ namespace RaceLibrary.Converters
 
         }
 
+        /// <summary>
+        /// Traverses a race JSON document to find the 'Races' element.
+        /// </summary>
         private static JsonElement FindRaceInJson(JsonElement root)
         {
             // Navigate the JSON file to find the Races array
@@ -31,6 +37,9 @@ namespace RaceLibrary.Converters
             return races.First();
         }
 
+        /// <summary>
+        /// Maps a JSON element to a Race object
+        /// </summary>
         private static Race MapRace(JsonElement root)
         {
             return new Race()
@@ -40,6 +49,9 @@ namespace RaceLibrary.Converters
             };
         }
 
+        /// <summary>
+        /// Maps the 'Laps' array of a JSON element to a collection of Lap objects.
+        /// </summary>
         private static IEnumerable<Lap> MapLaps(JsonElement root)
         {
             List<Lap> laps = [];
@@ -62,6 +74,9 @@ namespace RaceLibrary.Converters
             return laps;
         }
 
+        /// <summary>
+        /// Maps the 'time' property of a JSON element to a LapTIme object.
+        /// </summary>
         private static LapTime MapLapTime(JsonElement root)
         {
             // If sector support is added, this will need expanding.
@@ -75,6 +90,13 @@ namespace RaceLibrary.Converters
             }
         }
 
+        /// <summary>
+        /// Gets a property within a JSON element, returning the property if found or throwing an exception if not.
+        /// </summary>
+        /// <param name="root">JSON element to search within</param>
+        /// <param name="propertyName">Property name (case sensitive)</param>
+        /// <returns>The JSON element for the property found</returns>
+        /// <exception cref="JsonException">Thrown if the property is missing or null</exception>
         private static JsonElement GetRequiredProperty(JsonElement root, string propertyName)
         {
             if (root.TryGetProperty(propertyName, out var property)

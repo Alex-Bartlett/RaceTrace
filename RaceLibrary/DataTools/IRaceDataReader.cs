@@ -17,7 +17,7 @@ namespace RaceLibrary.DataTools
         /// Reads all JSON files in the DataDirectory and maps them to Races
         /// </summary>
         /// <returns>All races found in the directory</returns>
-        public Task<IEnumerable<Race>> ReadAllFiles();
+        public Task<IEnumerable<Race?>> ReadAllFilesAsync();
 
     }
 }

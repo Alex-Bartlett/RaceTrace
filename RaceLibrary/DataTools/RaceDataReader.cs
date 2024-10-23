@@ -8,26 +8,41 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using RaceLibrary.Converters;
+using Microsoft.Extensions.Logging;
 
 namespace RaceLibrary.DataTools
 {
     public class RaceDataReader : IRaceDataReader
     {
+        /// <summary>
+        /// Path for a directory containing race data JSON files
+        /// </summary>
         public string DataDirectory { get; set; }
 
-        public RaceDataReader(string dataPath)
+        private ILogger<RaceDataReader> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RaceDataReader"/> class.
+        /// </summary>
+        /// <param name="dataDirectory">Path for a directory containing race data JSON files</param>
+        /// <param name="logger">Logger to log messages to</param>
+        public RaceDataReader(string dataDirectory, ILogger<RaceDataReader> logger)
         {
-            ValidateDirectory(dataPath);
-            DataDirectory = dataPath;
+            ValidateDirectory(dataDirectory);
+            DataDirectory = dataDirectory;
+            _logger = logger;
         }
 
-        public async Task<IEnumerable<Race?>> ReadAllFiles()
+        public async Task<IEnumerable<Race?>> ReadAllFilesAsync()
         {
             var files = GetFiles();
             var raceReadTasks = files.Select(f => DeserializeFileAsync(f)).ToArray();
             return await Task.WhenAll(raceReadTasks);
         }
 
+        /// <summary>
+        /// Asynchronously deserializes a JSON file into a race
+        /// </summary>
         private async Task<Race?> DeserializeFileAsync(string filePath)
         {
             var serializerOptions = new JsonSerializerOptions()
@@ -37,12 +52,20 @@ namespace RaceLibrary.DataTools
 
             // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/deserialization
             using FileStream fileStream = File.OpenRead(filePath);
-            var race = await JsonSerializer.DeserializeAsync<Race>(fileStream, serializerOptions);
-            if (race is null)
+            try
             {
-                Console.Error.WriteLine("Failed to deserialize file at {0}", filePath);
+                var race = await JsonSerializer.DeserializeAsync<Race>(fileStream, serializerOptions);
+                if (race is null)
+                {
+                    _logger.LogWarning("Failed to deserialize file at {filePath}", filePath);
+                }
+                return race;
             }
-            return race;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to deserialize file at {filePath}", filePath);
+                return null;
+            }
         }
 
         private List<string> GetFiles()
@@ -50,24 +73,27 @@ namespace RaceLibrary.DataTools
             return Directory.EnumerateFiles(DataDirectory).ToList();
         }
 
-        private void ValidateDirectory(string dataPath)
+        /// <summary>
+        /// Performs checks on a directory path to verify it exists and contains JSON files
+        /// </summary>
+        private void ValidateDirectory(string directoryPath)
         {
-            if (string.IsNullOrWhiteSpace(dataPath))
+            if (string.IsNullOrWhiteSpace(directoryPath))
             {
-                throw new ArgumentException("Directory cannot be null or empty", nameof(dataPath));
+                throw new ArgumentException("Directory cannot be null or empty", nameof(directoryPath));
             }
-            if (!Directory.Exists(dataPath))
+            if (!Directory.Exists(directoryPath))
             {
-                throw new ArgumentException("Directory does not exist", nameof(dataPath));
+                throw new ArgumentException("Directory does not exist", nameof(directoryPath));
             }
-            var files = Directory.EnumerateFiles(dataPath);
+            var files = Directory.EnumerateFiles(directoryPath);
             if (!files.Any())
             {
-                throw new ArgumentException("Directory is empty", nameof(dataPath));
+                throw new ArgumentException("Directory is empty", nameof(directoryPath));
             }
             if (!files.Any(f => f.EndsWith(".json")))
             {
-                throw new ArgumentException("No valid files found in directory", nameof(dataPath));
+                throw new ArgumentException("No valid files found in directory", nameof(directoryPath));
             }
         }
     }
