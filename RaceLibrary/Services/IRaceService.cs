@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RaceLibrary.DataTools
+namespace RaceLibrary.Services
 {
-    public interface IRaceDataReader
+    public interface IRaceService
     {
         /// <summary>
         /// Path for a directory containing race data json files

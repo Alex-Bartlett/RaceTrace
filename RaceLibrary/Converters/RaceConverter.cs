@@ -32,7 +32,7 @@ namespace RaceLibrary.Converters
             var racesCount = races.Count();
             if (racesCount != 1)
             {
-                throw new JsonException(string.Format("Property 'Races' must contain exactly one element, found ", racesCount));
+                throw new JsonException(string.Format("Property 'Races' must contain exactly one element, found {0}", racesCount));
             }
             return races.First();
         }
