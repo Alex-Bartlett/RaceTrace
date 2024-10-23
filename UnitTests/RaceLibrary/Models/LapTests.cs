@@ -2,18 +2,18 @@
 
 namespace UnitTests.RaceLibrary.Models
 {
-    public class LapDataTests
+    public class LapTests
     {
         [Fact]
-        public void LapData_ValidPositionAndLapNumber_ShouldCreateLapDataSuccessfully()
+        public void Lap_ValidPositionAndLapNumber_ShouldCreateLapSuccessfully()
         {
             // Arrange
             var driverId = "driver";
-            var position = 1;
-            var lapNumber = 1;
+            short position = 1;
+            short lapNumber = 1;
             var lapTime = new LapTime(TimeSpan.Zero);
             // Act
-            var actual = new LapData(driverId, position, lapNumber, lapTime);
+            var actual = new Lap(driverId, position, lapNumber, lapTime);
             // Assert
             Assert.NotNull(actual);
         }
@@ -21,14 +21,14 @@ namespace UnitTests.RaceLibrary.Models
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        public void LapData_InvalidPosition_ShouldThrowArgumentOutOfRangeException(int position)
+        public void Lap_InvalidPosition_ShouldThrowArgumentOutOfRangeException(short position)
         {
             // Arrange
             var driverId = "driver";
-            var lapNumber = 1;
+            short lapNumber = 1;
             var lapTime = new LapTime(TimeSpan.Zero);
             // Act
-            Action actual = () => new LapData(driverId, position, lapNumber, lapTime);
+            Action actual = () => new Lap(driverId, position, lapNumber, lapTime);
             // Assert
             Assert.Throws<ArgumentOutOfRangeException>(actual);
         }
@@ -36,14 +36,14 @@ namespace UnitTests.RaceLibrary.Models
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
-        public void LapData_InvalidLapNumber_ShouldThrowArgumentOutOfRangeException(int lapNumber)
+        public void Lap_InvalidLapNumber_ShouldThrowArgumentOutOfRangeException(short lapNumber)
         {
             // Arrange
             var driverId = "driver";
-            var position = 1;
+            short position = 1;
             var lapTime = new LapTime(TimeSpan.Zero);
             // Act
-            Action actual = () => new LapData(driverId, position, lapNumber, lapTime);
+            Action actual = () => new Lap(driverId, position, lapNumber, lapTime);
             // Assert
             Assert.Throws<ArgumentOutOfRangeException>(actual);
         }

@@ -1,0 +1,43 @@
+{
+    "MRData": {
+        "RaceTable": {
+            "Races": [
+                {
+                    "raceName": "TestRace",
+                    "Laps": [
+                        {
+                            "number": "1",
+                            "Timings": [
+                                {
+                                    "driverId": "test_driver1",
+                                    "position": "1",
+                                    "time": "1:23.456"
+                                },
+                                {
+                                    "driverId": "test_driver2",
+                                    "position": "2",
+                                    "time": "1:56.789"
+                                }
+                            ]
+                        },
+                        {
+                            "number": "2",
+                            "Timings": [
+                                {
+                                    "driverId": "test_driver1",
+                                    "position": "1",
+                                    "time": "0:59.999"
+                                },
+                                {
+                                    "driverId": "test_driver2",
+                                    "position": "2",
+                                    "time": "1:00.000"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
