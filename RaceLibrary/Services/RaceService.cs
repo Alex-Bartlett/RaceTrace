@@ -36,16 +36,14 @@ namespace RaceLibrary.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Race?>> ReadAllFilesAsync()
+        public async Task<IEnumerable<Race>> ReadAllFilesAsync()
         {
-            try
+            var results = await _raceRepository.GetAllRacesAsync(DataDirectory);
+            foreach (var (filePath, exception) in results.Errors)
             {
-                return await _raceRepository.GetAllRacesAsync(DataDirectory);
+                _logger.LogError(exception, "Failed to read race data for file {filePath}", filePath);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to get race data.");
-                return [];
-            }
+            return results.Races.Where(r => r is not null)!;
+        }
     }
 }

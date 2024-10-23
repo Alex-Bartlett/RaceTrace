@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RaceLibrary.Common.Results
 {
     public record RaceLoadResult(
-        IReadOnlyList<Race> Races,
+        IReadOnlyList<Race?> Races,
         IReadOnlyList<(string filePath, Exception exception)> Errors
     );
 }

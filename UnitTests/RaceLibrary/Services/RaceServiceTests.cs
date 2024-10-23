@@ -1,46 +1,57 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using RaceLibrary.Models;
+using RaceLibrary.Repositories;
 using RaceLibrary.Services;
 
 namespace UnitTests.RaceLibrary.Services
 {
     public class RaceServiceTests
     {
+        private readonly Mock<RaceRepository> _raceRepositoryMock = new();
         private readonly Mock<ILogger<RaceService>> _loggerMock = new();
+        private readonly RaceService _sut;
+
+        public RaceServiceTests()
+        {
+            _sut = new("./", _raceRepositoryMock.Object, _loggerMock.Object);
+        }
 
         [Fact]
         public async void TestRead()
         {
             // Arrange
             var folderPath = "C:\\Users\\ABBARTLETT\\Documents\\Projects\\RaceTrace\\Data";
-            var sut = new RaceService(folderPath, _loggerMock.Object);
+            _sut.DataDirectory = folderPath;
             // Act
-            var actual = await sut.ReadAllFilesAsync();
+            var actual = await _sut.ReadAllFilesAsync();
             // Assert
             Assert.NotEmpty(actual);
         }
 
         [Fact]
-        public void RaceService_FolderPathInvalid_ShouldThrowArgumentException()
+        public void ReadAllFilesAsync_FolderPathInvalid_ShouldThrowArgumentException()
         {
             // Arrange
             var folderPath = "invalid";
+            _sut.DataDirectory = folderPath;
             // Act
-            Action actual = () => new RaceService(folderPath, _loggerMock.Object);
+            Func<Task> actual = async () => await _sut.ReadAllFilesAsync();
             // Assert
-            Assert.Throws<ArgumentException>(actual);
+            Assert.ThrowsAsync<ArgumentException>(actual);
         }
 
         [Fact]
-        public void RaceService_FolderPathWhitespace_ShouldThrowArgumentException()
+        public async void ReadAllFilesAsync_FolderPathWhitespace_ShouldThrowArgumentException()
         {
             // Arrange
             var folderPath = " ";
+            _sut.DataDirectory = folderPath;
             // Act
-            Action actual = () => new RaceService(folderPath, _loggerMock.Object);
+            Func<Task> actual = async () => await _sut.ReadAllFilesAsync();
             // Assert
-            Assert.Throws<ArgumentException>(actual);
+            // Verify it is logging HERE
+            Assert.ThrowsAsync<ArgumentException>(actual); // This passes for any error type?
         }
     }
 }

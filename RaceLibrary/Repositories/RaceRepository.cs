@@ -1,7 +1,9 @@
-﻿using RaceLibrary.Converters;
+﻿using RaceLibrary.Common.Results;
+using RaceLibrary.Converters;
 using RaceLibrary.Helpers;
 using RaceLibrary.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +19,29 @@ namespace RaceLibrary.Repositories
             Converters = { new RaceConverter() }
         };
 
-        public async Task<IEnumerable<Race?>> GetAllRacesAsync(string raceDataDirectory)
+        public async Task<RaceLoadResult> GetAllRacesAsync(string raceDataDirectory)
         {
             var files = FileHelper.GetFilesWithExtension(raceDataDirectory, ".json");
-            var raceReadTasks = files.Select(f => DeserializeFileAsync(f)).ToArray();
-            return await Task.WhenAll(raceReadTasks);
+            // Organise results into successful results and failures for transparency
+            ConcurrentBag<Race?> races = [];
+            ConcurrentBag<(string, Exception)> failures = [];
+            var raceReadTasks = files.Select(
+                async file => {
+                    try
+                    {
+                        var race = await DeserializeFileAsync(file);
+                        races.Add(race);
+                    }
+                    catch (Exception ex)
+                    {
+                        failures.Add((file, ex));
+                    }
+                }
+            );
+
+            await Task.WhenAll(raceReadTasks);
+
+            return new RaceLoadResult(races.ToArray(), failures.ToArray());
         }
 
         /// <summary>
