@@ -23,5 +23,26 @@ namespace RaceLibrary.Helpers
             }
             return Directory.EnumerateFiles(directoryPath).Where(f => f.EndsWith(fileExtension));
         }
+
+        /// <summary>
+        /// Checks if a directory exists and path
+        /// </summary>
+        /// <param name="directoryPath"></param>
+        /// <param name="invalidReason"></param>
+        /// <returns></returns>
+        public static bool IsValidDirectory(string directoryPath, out string? invalidReason)
+        {
+            invalidReason = null;
+            if (string.IsNullOrWhiteSpace(directoryPath))
+            {
+                invalidReason = $"{nameof(directoryPath)} is null or empty";
+            }
+            if (!Directory.Exists(directoryPath))
+            {
+                invalidReason = $"Directory does not exist: {directoryPath}";
+                return false;
+            }
+            return true;
+        }
     }
 }

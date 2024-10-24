@@ -26,7 +26,8 @@ namespace RaceLibrary.Repositories
             ConcurrentBag<Race?> races = [];
             ConcurrentBag<(string, Exception)> failures = [];
             var raceReadTasks = files.Select(
-                async file => {
+                async file =>
+                {
                     try
                     {
                         var race = await DeserializeFileAsync(file);
