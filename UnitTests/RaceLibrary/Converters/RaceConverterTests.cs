@@ -29,31 +29,31 @@ namespace UnitTests.RaceLibrary.Converters
                                     "raceName": "TestRace",
                                     "Laps": [
                                         {
-                                            "number": 1,
+                                            "number": "1",
                                             "Timings": [
                                                 {
                                                     "driverId": "test_driver1",
-                                                    "position": 1,
+                                                    "position": "1",
                                                     "time": "1:23.456"
                                                 },
                                                 {
                                                     "driverId": "test_driver2",
-                                                    "position": 2,
+                                                    "position": "2",
                                                     "time": "1:56.789"
                                                 }
                                             ]
                                         },
                                         {
-                                            "number": 2,
+                                            "number": "2",
                                             "Timings": [
                                                 {
                                                     "driverId": "test_driver1",
-                                                    "position": 1,
+                                                    "position": "1",
                                                     "time": "0:59.999"
                                                 },
                                                 {
                                                     "driverId": "test_driver2",
-                                                    "position": 2,
+                                                    "position": "2",
                                                     "time": "1:00.000"
                                                 }
                                             ]
@@ -136,7 +136,7 @@ namespace UnitTests.RaceLibrary.Converters
         [InlineData("{\"MRData\": null}")]
         [InlineData("{\"MRData\": {\"RaceTable\": null}}")]
         [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": null}}}")]
-        [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": [{\"raceName\": null,\"Laps\": [{\"number\": 1,\"Timings\": [{\"driverId\": \"test_driver1\",\"position\": 1,\"time\": \"1:23.456\"}]}]}]}}}")]
+        [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": [{\"raceName\": null,\"Laps\": [{\"number\": \"1\",\"Timings\": [{\"driverId\": \"test_driver1\",\"position\": \"1\",\"time\": \"1:23.456\"}]}]}]}}}")]
         [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": [{\"raceName\": \"TestRace\",\"Laps\": null}]}}}")]
         public void Read_RequiredValueNull_ShouldThrowJsonException(string json)
         {
@@ -152,7 +152,7 @@ namespace UnitTests.RaceLibrary.Converters
         public void Read_RaceNameMissing_ShouldThrowJsonException()
         {
             // Arrange
-            var json = "{\"MRData\": {\"RaceTable\": {\"Races\": [{\"Laps\": [{\"number\": 1,\"Timings\": [{\"driverId\": \"test_driver1\",\"position\": 1,\"time\": \"1:23.456\"}]}]}]}}}";
+            var json = "{\"MRData\": {\"RaceTable\": {\"Races\": [{\"Laps\": [{\"number\": \"1\",\"Timings\": [{\"driverId\": \"test_driver1\",\"position\": \"1\",\"time\": \"1:23.456\"}]}]}]}}}";
 
             // Act
             Action actual = () => JsonSerializer.Deserialize<Race>(json, _options);
@@ -161,7 +161,7 @@ namespace UnitTests.RaceLibrary.Converters
         }
 
         [Fact]
-        public void Read_LapTimeFormatInvalid_ShouldThrowFormatException()
+        public void Read_LapTimeFormatInvalid_ShouldThrowJsonException()
         {
             // Arrange
             var json = """
@@ -177,7 +177,7 @@ namespace UnitTests.RaceLibrary.Converters
                                             "Timings": [
                                                 {
                                                     "driverId": "test_driver1",
-                                                    "position": 1,
+                                                    "position": "1",
                                                     "time": "1:23:45.67"
                                                 }
                                             ]
@@ -193,7 +193,7 @@ namespace UnitTests.RaceLibrary.Converters
             // Act
             Action action = () => JsonSerializer.Deserialize<Race>(json, _options);
             // Assert
-            Assert.Throws<FormatException>(action);
+            Assert.Throws<JsonException>(action);
         }
 
         // Helper method to convert time from format in JSON to TimeSpan
