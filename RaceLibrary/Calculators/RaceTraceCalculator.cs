@@ -11,9 +11,9 @@ namespace RaceLibrary.Calculators
     {
         public static (string driver, TimeSpan[] lapTimes)[] CalculatorRaceTrace(Race race)
         {
-            List<(string, TimeSpan[])> values = [];
-
-
+            Dictionary<string, TimeSpan[]> driverLapTimes = new();
+            var laps = race.Laps.OrderBy(l => l.LapNumber);
+            return [];
         }
     }
 }
