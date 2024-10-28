@@ -44,7 +44,8 @@ namespace RaceLibrary.Converters
         {
             return new Race()
             {
-                Name = GetRequiredProperty(root, "raceName").GetString()!,
+                Name = string.Concat(GetRequiredProperty(root, "raceName").GetString(),
+                    GetRequiredProperty(root, "season").GetString()),
                 Laps = MapLaps(root),
             };
         }
@@ -58,13 +59,13 @@ namespace RaceLibrary.Converters
             var lapElements = GetRequiredProperty(root, "Laps").EnumerateArray();
             foreach (var lapElement in lapElements)
             {
-                var lapNumber = short.Parse(GetRequiredProperty(lapElement, "number").GetString()!);
+                var lapNumber = int.Parse(GetRequiredProperty(lapElement, "number").GetString()!);
                 var timingsElements = GetRequiredProperty(lapElement, "Timings").EnumerateArray();
                 foreach (var timingsElement in timingsElements)
                 {
                     Lap lap = new(
                         GetRequiredProperty(timingsElement, "driverId").GetString()!,
-                        short.Parse(GetRequiredProperty(timingsElement, "position").GetString()!),
+                        int.Parse(GetRequiredProperty(timingsElement, "position").GetString()!),
                         lapNumber,
                         MapLapTime(timingsElement)
                     );

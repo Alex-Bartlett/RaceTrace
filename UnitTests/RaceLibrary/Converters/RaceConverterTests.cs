@@ -27,6 +27,7 @@ namespace UnitTests.RaceLibrary.Converters
                             "Races": [
                                 {
                                     "raceName": "TestRace",
+                                    "season": "2024",
                                     "Laps": [
                                         {
                                             "number": "1",
@@ -68,7 +69,7 @@ namespace UnitTests.RaceLibrary.Converters
 
             var expectedRace = new Race
             {
-                Name = "TestRace",
+                Name = "TestRace2024",
                 Laps = new List<Lap>()
                 {
                     new
@@ -137,7 +138,7 @@ namespace UnitTests.RaceLibrary.Converters
         [InlineData("{\"MRData\": {\"RaceTable\": null}}")]
         [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": null}}}")]
         [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": [{\"raceName\": null,\"Laps\": [{\"number\": \"1\",\"Timings\": [{\"driverId\": \"test_driver1\",\"position\": \"1\",\"time\": \"1:23.456\"}]}]}]}}}")]
-        [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": [{\"raceName\": \"TestRace\",\"Laps\": null}]}}}")]
+        [InlineData("{\"MRData\": {\"RaceTable\": {\"Races\": [{\"raceName\": \"TestRace\",\"season\": \"2024\",\"Laps\": null}]}}}")]
         public void Read_RequiredValueNull_ShouldThrowJsonException(string json)
         {
             // Arrange
@@ -171,6 +172,7 @@ namespace UnitTests.RaceLibrary.Converters
                             "Races": [
                                 {
                                     "raceName": "TestRace",
+                                    "season": "2024",
                                     "Laps": [
                                         {
                                             "number": 1,
