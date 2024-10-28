@@ -44,7 +44,8 @@ namespace RaceLibrary.Converters
         {
             return new Race()
             {
-                Name = GetRequiredProperty(root, "raceName").GetString()!,
+                Name = string.Concat(GetRequiredProperty(root, "raceName").GetString(),
+                    GetRequiredProperty(root, "season").GetString()),
                 Laps = MapLaps(root),
             };
         }

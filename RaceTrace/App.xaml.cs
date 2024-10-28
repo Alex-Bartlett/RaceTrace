@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RaceLibrary.Repositories;
 using RaceLibrary.Services;
+using RaceTrace.ViewModels;
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -28,9 +29,9 @@ namespace RaceTrace
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton<MainWindow>();
-                    services.AddScoped<MainViewModel>();
                     services.AddScoped<IRaceService, RaceService>();
                     services.AddScoped<IRaceRepository, RaceRepository>();
+                    services.AddSingleton<MainViewModel>();
 
                 })
                 .Build();
