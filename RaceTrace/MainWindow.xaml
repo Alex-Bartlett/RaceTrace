@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
         <TextBlock Name="txt_Title" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" Text="{Binding Title, UpdateSourceTrigger=Explicit}">Race Trace</TextBlock>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-            <TextBlock FontSize="22" VerticalAlignment="Center">Data Folder:</TextBlock>
+            <TextBlock FontSize="22" VerticalAlignment="Center">Race Data Folder:</TextBlock>
             <TextBlock x:Name="txt_SelectedFolder" FontSize="22" Margin="10 0" VerticalAlignment="Center" Text="No folder selected"></TextBlock>
             <Button x:Name="btn_BrowseFolder" Grid.Column="1" Grid.Row="1" Width="100" Height="40" FontSize="22" Click="btnBrowse_Clicked">Browse</Button>
         </StackPanel>

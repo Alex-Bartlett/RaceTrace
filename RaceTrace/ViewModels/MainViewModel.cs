@@ -22,16 +22,8 @@ namespace RaceTrace.ViewModels
         public MainViewModel(IRaceService raceService)
         {
             _raceService = raceService;
-
-            this.PlotModel = new PlotModel { Title = "Example 1" };
-            this.PlotModel.Series.Add(new FunctionSeries(Math.Cos, 0, 10, 0.1, "cos(x)"));
-            PlotModel.Legends.Add(new Legend()
-            {
-                LegendTitle = "Legend",
-
-            });
-            var race = new Race() { Name = "Test", Laps = [] };
-            Races = [race];
+            Races = [];
+            PlotModel = new PlotModel();
         }
 
         public async Task LoadRacesFromFolderAsync(string folderPath)
